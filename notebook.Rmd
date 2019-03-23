@@ -39,6 +39,7 @@ ggplot(smoted.df, aes(x, y, color = label)) +
   geom_point() +
   ggtitle("Example of an imbalanced dataset with synthetic data")
 ```
+
 ```{r}
 # in minutes after 12
 johns.wakes <- c(318, 317, 316, 320, 318, 319,
@@ -46,6 +47,7 @@ johns.wakes <- c(318, 317, 316, 320, 318, 319,
 
 skim(johns.wakes[1:9])
 ```
+
 ```{r}
 skim(johns.wakes)
 ```
@@ -56,7 +58,6 @@ ggplot(data.frame(time = johns.wakes, day=as.factor(seq_along(johns.wakes))), ae
   theme_classic() +
   ggtitle("John's wake up times (in minutes after midnight)")
 ```
-
 
 ```{r}
 johns.cluster <- kmeans(johns.wakes, centers = 2)
