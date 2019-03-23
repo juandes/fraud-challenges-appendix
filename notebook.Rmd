@@ -1,0 +1,73 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+set.seed(10)
+if(!require(pacman))install.packages("pacman")
+pacman::p_load('ggplot2', 'smotefamily', 'skimr')
+```
+
+```{r}
+sample.df <- data.frame(x = c(0.15, 0.45, 0.1, 0.3, 0.3, 0.4, 0.6, 0.3, 0.4, 0.7, 0.8, 0.9),
+                 y = c(0.25, 0.3, 0.1, 0.2, 0.4, 0.4, 0.3, 0.6, 0.4, 0.2, 0.7, 0.6),
+                 label = c('X','X','X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'Y', 'Y'))
+```
+
+```{r}
+ggplot(sample.df, aes(x, y, color = label)) +
+  geom_point() +
+  ggtitle("Example of an imbalanced dataset")
+```
+
+
+
+```{r}
+smoted <- SMOTE(sample.df[,1:2],  # feature values
+      as.numeric(sample.df[,3]),  # class labels
+      K = 1, dup_size = 1)
+```
+
+```{r}
+smoted.df <- smoted$data
+colnames(smoted.df) <- c('x', 'y', 'label')
+smoted.df$label[smoted.df$smoted.df == "1"] <- "X"
+smoted.df$label[smoted.df$smoted.df == "2"] <- "Y"
+ggplot(smoted.df, aes(x, y, color = label)) +
+  geom_point() +
+  ggtitle("Example of an imbalanced dataset with synthetic data")
+```
+```{r}
+# in minutes after 12
+johns.wakes <- c(318, 317, 316, 320, 318, 319,
+                 322, 322, 318, 420)
+
+skim(johns.wakes[1:9])
+```
+```{r}
+skim(johns.wakes)
+```
+
+```{r}
+ggplot(data.frame(time = johns.wakes, day=as.factor(seq_along(johns.wakes))), aes(day, time)) +
+  geom_bar(stat='identity') + 
+  theme_classic() +
+  ggtitle("John's wake up times (in minutes after midnight)")
+```
+
+
+```{r}
+johns.cluster <- kmeans(johns.wakes, centers = 2)
+clustering<-data.frame(time = johns.wakes, cluster = as.factor(johns.cluster$cluster))
+
+ggplot(clustering, aes(time, y=as.factor(c(0)), color=cluster)) +
+  geom_point() +
+  ggtitle("1D clustering of John's wake up times") +
+  theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+```
+
+
